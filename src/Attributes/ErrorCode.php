@@ -1,19 +1,17 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace danog\Stun\Attributes;
 
 use Amp\ByteStream\BufferedReader;
-use Amp\ByteStream\WritableStream;
 use Amp\Cancellation;
-use Amp\Socket\InternetAddress;
 use danog\Stun\Attribute;
-use danog\Stun\StunClient;
 use Webmozart\Assert\Assert;
 
 /**
  * Represents an ERROR-CODE attribute.
  */
-final class ErrorCode extends Attribute {
+final class ErrorCode extends Attribute
+{
     public const TYPE = 0x0009;
 
     /**
@@ -22,14 +20,13 @@ final class ErrorCode extends Attribute {
     public function __construct(
         public readonly int $err,
         public readonly string $reason
-    )
-    {
+    ) {
     }
     protected static function readAttr(BufferedReader $reader, string $transactionId, int $length, ?Cancellation $cancellation = null): Attribute
     {
         $reader->readLength(2, $cancellation);
-        $class = ord($reader->readLength(1, $cancellation));
-        $number = ord($reader->readLength(1, $cancellation));
+        $class = \ord($reader->readLength(1, $cancellation));
+        $number = \ord($reader->readLength(1, $cancellation));
         Assert::true($class >= 3);
         Assert::true($class <= 6);
         Assert::true($number < 100);
@@ -39,6 +36,6 @@ final class ErrorCode extends Attribute {
     {
         $number = $this->err % 100;
         $class = $this->err - $number;
-        return "\0\0".chr($class).chr($number).$this->reason;
+        return "\0\0".\chr($class).\chr($number).$this->reason;
     }
 }

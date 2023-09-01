@@ -1,9 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace danog\Stun;
 
 use Amp\ByteStream\BufferedReader;
-use Amp\ByteStream\WritableStream;
 use Amp\Cancellation;
 use danog\Stun\Attributes\ErrorCode;
 use danog\Stun\Attributes\Fingerprint;
@@ -14,7 +13,8 @@ use danog\Stun\Attributes\Username;
 use danog\Stun\Attributes\XorMappedAddress;
 use Webmozart\Assert\Assert;
 
-abstract class Attribute {
+abstract class Attribute
+{
     /**
      * @internal
      */
@@ -24,15 +24,17 @@ abstract class Attribute {
         return $resto < 0 ? $resto + \abs($b) : $resto;
     }
 
-    public function write(string $transactionId): string {
+    public function write(string $transactionId): string
+    {
         $data = $this->writeAttr($transactionId);
-        return pack('n', $this::TYPE).strlen($data).$data.str_repeat("\0", 4 - (strlen($data) % 4));
+        return \pack('n', $this::TYPE).\strlen($data).$data.\str_repeat("\0", 4 - (\strlen($data) % 4));
     }
-    public static function read(BufferedReader $reader, int &$totalLength, string $transactionId, ?Cancellation $cancellation = null): ?self {
+    public static function read(BufferedReader $reader, int &$totalLength, string $transactionId, ?Cancellation $cancellation = null): ?self
+    {
         $totalLength -= 4;
         Assert::true($totalLength >= 0);
 
-        $r = unpack('n*', $reader->readLength(4, $cancellation));
+        $r = \unpack('n*', $reader->readLength(4, $cancellation));
         $type = $r[1];
         $length = $r[2];
         $result = match ($type) {
@@ -45,7 +47,7 @@ abstract class Attribute {
             XorMappedAddress::TYPE => XorMappedAddress::class,
             default => null,
         };
-        
+
         $left = self::posmod($length, 4);
         $totalLength -= $length + $left;
         Assert::true($totalLength >= 0);
@@ -55,8 +57,9 @@ abstract class Attribute {
         } else {
             $reader->readLength($length, $cancellation);
         }
-        if ($left)
-        $reader->readLength($left, $cancellation);
+        if ($left) {
+            $reader->readLength($left, $cancellation);
+        }
         return $result;
     }
 

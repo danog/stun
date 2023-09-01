@@ -7,6 +7,9 @@
         "amphp/socket": "^2.2",
         "webmozart/assert": "^1.11"
     },
+    "require-dev": {
+        "amphp/php-cs-fixer-config": "v2.x-dev"
+    },
     "license": "AGPLv3",
     "autoload": {
         "psr-4": {
@@ -18,5 +21,8 @@
             "name": "Daniil Gentili",
             "email": "daniil@daniil.it"
         }
-    ]
+    ],
+    "scripts": {
+        "cs-fix": "PHP_CS_FIXER_IGNORE_ENV=1 php -d pcre.jit=0 vendor/bin/php-cs-fixer fix -v"
+    }
 }
