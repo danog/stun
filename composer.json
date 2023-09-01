@@ -1,0 +1,22 @@
+{
+    "name": "danog/stun",
+    "description": "Pure PHP async implementation of STUN",
+    "type": "library",
+    "require": {
+        "php-64bit": ">=8.1.17",
+        "amphp/socket": "^2.2",
+        "webmozart/assert": "^1.11"
+    },
+    "license": "AGPLv3",
+    "autoload": {
+        "psr-4": {
+            "Danog\\Stun\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Daniil Gentili",
+            "email": "daniil@daniil.it"
+        }
+    ]
+}
