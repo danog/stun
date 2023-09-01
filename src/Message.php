@@ -41,7 +41,10 @@ final class Message
 
         $attributes = [];
         while ($length) {
-            $attributes []= Attribute::read($reader, $length, $transactionId, $cancellation);
+            $attr = Attribute::read($reader, $length, $transactionId, $cancellation);
+            if ($attr) {
+                $attributes []= $attr;
+            }
         }
 
         return new self(

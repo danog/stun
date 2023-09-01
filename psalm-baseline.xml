@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.15.0@5c774aca4746caf3d239d9c8cadb9f882ca29352">
+  <file src="src/Attribute.php">
+    <ArgumentTypeCoercion>
+      <code>$left</code>
+      <code>$length</code>
+    </ArgumentTypeCoercion>
+    <UndefinedConstant>
+      <code>$this::TYPE</code>
+    </UndefinedConstant>
+  </file>
+  <file src="src/Attributes/ErrorCode.php">
+    <ArgumentTypeCoercion>
+      <code>$length-4</code>
+    </ArgumentTypeCoercion>
+    <InvalidArgument>
+      <code>$class*100+$number</code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Attributes/MappedAddress.php">
+    <ParamNameMismatch>
+      <code>$_</code>
+    </ParamNameMismatch>
+  </file>
+  <file src="src/Attributes/Software.php">
+    <ArgumentTypeCoercion>
+      <code>$length</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Attributes/Username.php">
+    <ArgumentTypeCoercion>
+      <code>$length</code>
+    </ArgumentTypeCoercion>
+  </file>
+  <file src="src/Attributes/XorMappedAddress.php">
+    <PossiblyUndefinedVariable>
+      <code>$len</code>
+    </PossiblyUndefinedVariable>
+  </file>
+  <file src="src/Message.php">
+    <UndefinedConstant>
+      <code>MessageMethod::MASK</code>
+    </UndefinedConstant>
+  </file>
+</files>

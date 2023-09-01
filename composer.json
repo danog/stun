@@ -5,7 +5,8 @@
     "require": {
         "php-64bit": ">=8.1.17",
         "amphp/socket": "^2.2",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.11",
+        "psalm/phar": "^5.15"
     },
     "require-dev": {
         "amphp/php-cs-fixer-config": "v2.x-dev"

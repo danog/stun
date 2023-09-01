@@ -24,9 +24,7 @@ final class StunClient
         $this->socket = connect($endpoint);
     }
 
-    /**
-     * @return list<Attribute>
-     */
+    /** @no-named-arguments */
     public function bind(Attribute ...$attributes): Message
     {
         $msg = new Message(MessageMethod::BINDING, MessageClass::REQUEST, $attributes, \random_bytes(12));

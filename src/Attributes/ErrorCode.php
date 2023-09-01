@@ -27,8 +27,7 @@ final class ErrorCode extends Attribute
         $reader->readLength(2, $cancellation);
         $class = \ord($reader->readLength(1, $cancellation));
         $number = \ord($reader->readLength(1, $cancellation));
-        Assert::true($class >= 3);
-        Assert::true($class <= 6);
+        Assert::true($class >= 3 && $class <= 6);
         Assert::true($number < 100);
         return new self($class*100+$number, $reader->readLength($length-4));
     }
