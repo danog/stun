@@ -15,6 +15,15 @@ use danog\Stun\Attributes\XorMappedAddress;
 use Webmozart\Assert\Assert;
 
 abstract class Attribute {
+    /**
+     * @internal
+     */
+    public static function posmod(int $a, int $b): int
+    {
+        $resto = $a % $b;
+        return $resto < 0 ? $resto + \abs($b) : $resto;
+    }
+
     public function write(string $transactionId): string {
         $data = $this->writeAttr($transactionId);
         return pack('n', $this::TYPE).strlen($data).$data.str_repeat("\0", 4 - (strlen($data) % 4));
@@ -23,7 +32,7 @@ abstract class Attribute {
         $totalLength -= 4;
         Assert::true($totalLength >= 0);
 
-        $r = unpack('n', $reader->readLength(4, $cancellation));
+        $r = unpack('n*', $reader->readLength(4, $cancellation));
         $type = $r[1];
         $length = $r[2];
         $result = match ($type) {
@@ -37,7 +46,8 @@ abstract class Attribute {
             default => null,
         };
         
-        $totalLength -= $length + (4 - ($length%4));
+        $left = self::posmod($length, 4);
+        $totalLength -= $length + $left;
         Assert::true($totalLength >= 0);
 
         if ($result) {
@@ -45,7 +55,8 @@ abstract class Attribute {
         } else {
             $reader->readLength($length, $cancellation);
         }
-        $reader->readLength(4 - ($length % 4), $cancellation);
+        if ($left)
+        $reader->readLength($left, $cancellation);
         return $result;
     }
 

@@ -27,12 +27,13 @@ final class MappedAddress extends Attribute {
     {
         Assert::true($length >= 8, "Wrong length!");
         $reader->readLength(1, $cancellation);
-        $ip = $reader->readLength($len = match (ord($reader->readLength(1, $cancellation))) {
+        $len = match (ord($reader->readLength(1, $cancellation))) {
             1 => 4, 
             2 => 16
-        }, $cancellation);
+        };
         Assert::eq($len+4, $length, "Wrong length!");
         $port = unpack('n', $reader->readLength(2, $cancellation))[1];
+        $ip = $reader->readLength($len);
         return new self(new InternetAddress(
             inet_ntop($ip),
             $port
@@ -41,6 +42,6 @@ final class MappedAddress extends Attribute {
 
     protected function writeAttr(string $_): string  {
         $addr = $this->address->getAddressBytes();
-        return "\0".(strlen($addr) === 4 ? 1 : 16).$addr.pack('n', $this->address->getPort());
+        return "\0".(strlen($addr) === 4 ? 1 : 16).pack('n', $this->address->getPort()).$addr;
     }
 }

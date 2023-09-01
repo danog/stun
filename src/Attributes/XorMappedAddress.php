@@ -27,14 +27,15 @@ final class XorMappedAddress extends Attribute {
 
     protected static function readAttr(BufferedReader $reader, string $transactionId, int $length, ?Cancellation $cancellation = null): self
     {
-        Assert::true($length >= 8, "Wrong length!");
+        Assert::greaterThanEq($length, 8);
         $reader->readLength(1, $cancellation);
-        $ip = match ($len = ord($reader->readLength(1, $cancellation))) {
-            1 => $reader->readLength(4, $cancellation) ^ Message::MAGIC_COOKIE, 
-            2 => $reader->readLength(16, $cancellation) ^ (Message::MAGIC_COOKIE.$transactionId)
-        };
+        $type = ord($reader->readLength(1, $cancellation));
         $port = unpack('n', $reader->readLength(2, $cancellation) ^ substr(Message::MAGIC_COOKIE, 2))[1];
-        Assert::eq($len+4, $length, "Wrong length!");
+        $ip = match ($type) {
+            1 => $reader->readLength($len = 4, $cancellation) ^ Message::MAGIC_COOKIE, 
+            2 => $reader->readLength($len = 16, $cancellation) ^ (Message::MAGIC_COOKIE.$transactionId)
+        };
+        Assert::eq($len+4, $length);
         return new self(new InternetAddress(
             inet_ntop($ip),
             $port
@@ -48,6 +49,6 @@ final class XorMappedAddress extends Attribute {
         } else {
             $addr ^= Message::MAGIC_COOKIE.$transactionId;
         }
-        return "\0".(strlen($addr) === 4 ? 1 : 16).$addr.(pack('n', $this->address->getPort()) ^ substr(Message::MAGIC_COOKIE, 2));
+        return "\0".(strlen($addr) === 4 ? 1 : 16).(pack('n', $this->address->getPort()) ^ substr(Message::MAGIC_COOKIE, 2)).$addr;
     }
 }
